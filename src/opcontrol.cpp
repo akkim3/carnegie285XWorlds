@@ -26,7 +26,7 @@
  ControllerButton placeholder (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
  ControllerButton intakeRev (ControllerDigital::L2);
-
+auto scraper = AsyncControllerFactory::posPID(11, 0.001, 0.0, 0.0001);
  okapi::Motor intake {8};
  okapi::Motor flywheelA {7};
 okapi::Motor indexer {3};
