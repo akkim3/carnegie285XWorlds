@@ -12,7 +12,7 @@ double motorSlew = 0.7;
 
 
 
-double targetRPM = 2550;
+double targetRPM = 500*5;
 
 double currentRPM = 0;
 
