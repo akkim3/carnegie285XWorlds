@@ -1,5 +1,5 @@
-#include "C:\Users\clove\Desktop\X4\include\main.h"
-#include "C:\Users\clove\Desktop\X4\src\flywheelutil\flywheel.hpp"
+#include "main.h"
+#include "flywheelutil\flywheel.hpp"
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
