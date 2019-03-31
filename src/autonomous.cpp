@@ -35,6 +35,8 @@ auto scraper = AsyncControllerFactory::posPID(11,pot, 0.001, 0.0, 0.0001);
  okapi::Motor intakeA {8};
  okapi::Motor flywheelAuto {7};
 okapi::Motor indexerA {3};
+
+
 void autonomous() {
 //  profile.generatePath({Point{1_ft, 7ft, 0_deg}, Point{5_ft, 7_ft, 0_deg}}, "Cap"});
  profileController.generatePath({
@@ -44,6 +46,37 @@ void autonomous() {
 );
 profileController.setTarget("Ball");
 intakeA.moveVelocity(200);
+profileController.waitUntilSettled();
+profileController.setTarget("Ball", true); //Go back to starting tile
+profileController.waitUntilSettled();
+profileController.removePath("Ball"); //Ball path removed here
 
+
+driveA.turnAngle(-45_deg);
+//Should shoot mid flags here
+
+profileController.generatePath({
+Point{0_ft, 0_ft, 0_deg},
+Point{2_ft, 0_ft, 0_deg}},
+"Scrape"
+);
+profileController.setTarget("Scrape");
+profileController.waitUntilSettled();
+profileController.setTarget("Scrape", true);
+profileController.waitUntilSettled();
+profileController.removePath("Scrape");
+
+driveA.turnAngle(-45_deg);
+//Should shoot top and mid flags
+profileController.generatePath({
+Point{0_ft, 0_ft, 0_deg},
+Point{4_ft, 0_ft, 0_deg}},
+"botFlag"
+);
+profileController.setTarget("botFlag");
+profileController.waitUntilSettled();
+profileController.setTarget("botFlag", true);
+profileController.waitUntilSettled();
+profileController.removePath("botFlag");
 
 }
