@@ -1,5 +1,6 @@
 #include "main.h"
 #include "flywheelutil\flywheel.hpp"
+#include "C:\Users\clove\Desktop\X4\src\robotUtil\initRobot.hpp"
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -26,51 +27,75 @@
  ControllerButton placeholder (ControllerDigital::R2);
  ControllerButton intakeFwd (ControllerDigital::L1);
  ControllerButton intakeRev (ControllerDigital::L2);
-auto pot = Potentiometer(1);
-auto scraper = AsyncControllerFactory::posPID(11,pot, 0.001, 0.0, 0.0001);
- okapi::Motor intake {8};
- okapi::Motor flywheelA {7};
-okapi::Motor indexer {3};
- auto drive = ChassisControllerFactory::create(
-   {1,9},
-   {-10,-2},
-   AbstractMotor::gearset::green,
-   {4.125_in, 12.125_in}
- );
+
+ ControllerButton doubleShotTest (ControllerDigital::A);
+bool intakeOn = false;
+bool intakeRevOn = false;
+ void toggleIntake(){
+   intakeOn = !intakeOn;
+   if(intakeOn){
+     intake.moveVelocity(200);
+   } else{
+     intake.moveVelocity(0);
+   }
+ }
+ void toggleIntakeRev(){
+   intakeRevOn = !intakeRevOn;
+   if(intakeRevOn){
+   intake.moveVelocity(-200);
+   indexer.moveVelocity(-600);
+} else{
+intake.moveVelocity(0);
+indexer.moveVelocity(0);
+
+}
+ }
+void doubleShot(){
+  indexer.moveVelocity(600);
+  pros::delay(200);
+  scraper.moveRelative(-120, 200);
+  pros::delay(200);
+  scraper.moveRelative(-120, 200);
+}
+
 void opcontrol() {
   intake.setGearing(AbstractMotor::gearset::blue);
-  flywheelA.setGearing(AbstractMotor::gearset::blue);
+  //flywheel.setGearing(AbstractMotor::gearset::blue);
   indexer.setGearing(AbstractMotor::gearset::green);
+
+
 	while(true){
     //intake.moveVelocity();
     flywheelControl();
     //flywheelA.setMaxVelocity(536);
     //flywheelA.moveVelocity(535);
-    if(intakeFwd.isPressed() && !intakeRev.isPressed() && !placeholder.isPressed()){
-      intake.moveVelocity(200);
-      }
-    else if(intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed()){
-        intake.moveVelocity(-200);
-        }
-    else if(intakeRev.isPressed() && intakeFwd.isPressed() && !placeholder.isPressed()){
-          intake.moveVelocity(-120);
-          indexer.moveVelocity(-120);
-          }
-  else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed()){
+    if(intakeFwd.changedToPressed()){
+      toggleIntake();
 
-          }
-  else if(intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed()){
+    }
+    if(intakeRev.changedToPressed()){
+      toggleIntakeRev();
 
-          }
-    else{
-        intake.moveVelocity(0);
-        indexer.moveVelocity(0);
-      }
+    }
+    if(placeholder.isPressed()){
+
+      scraper.moveRelative(200,200);
+
+    }
+    if(placeholder.changedToReleased()){
+
+      scraper.moveRelative(-200, 200);
+    }
     if(flywheelShoot.isPressed()){
       indexer.moveVelocity(200);
       intake.moveVelocity(400);
     }
-    drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
+    if(doubleShotTest.changedToPressed()){
+
+        doubleShot();
+    }
+    drive.arcade(controller.getAnalog(ControllerAnalog::leftY),controller.getAnalog(ControllerAnalog::rightX));
+    //drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
 		pros::delay(20);
 	}
 }

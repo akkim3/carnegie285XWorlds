@@ -11,18 +11,7 @@
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
- auto driveA = ChassisControllerFactory::create(
-   {1,9},
-   {-10,-2},
-   AbstractMotor::gearset::green,
-   {4.125_in, 12.125_in}
- );
- AsyncMotionProfileController profileController = AsyncControllerFactory::motionProfile(
-   2,  // Maximum linear velocity of the Chassis in m/s
-   2.0,  // Maximum linear acceleration of the Chassis in m/s/s
-   2.5, // Maximum linear jerk of the Chassis in m/s/s/s
-  driveA // Chassis Controller
- );
+#include "C:\Users\clove\Desktop\X4\src\robotUtil\initRobot.hpp"
 QLength sideCapDistance = 3.5_ft;
 QLength frontFlagDistance = 4.5_ft;
 QLength frontCapDistance = 4.0_ft;
@@ -30,11 +19,7 @@ QLength midFlagDistance = 1.0_ft;
 QLength platformAlignDistance = -4.0_ft;
 QLength alliancePlatformDistance = 4.0_ft;
 QLength centerPlatformDistance = 6.0_ft;
-auto pot = Potentiometer(1);
-auto scraper = AsyncControllerFactory::posPID(11,pot, 0.001, 0.0, 0.0001);
- okapi::Motor intakeA {8};
- okapi::Motor flywheelAuto {7};
-okapi::Motor indexerA {3};
+
 
 
 void autonomous() {
@@ -45,14 +30,14 @@ void autonomous() {
   "Ball" // Profile name
 );
 profileController.setTarget("Ball");
-intakeA.moveVelocity(200);
+intake.moveVelocity(200);
 profileController.waitUntilSettled();
 profileController.setTarget("Ball", true); //Go back to starting tile
 profileController.waitUntilSettled();
 profileController.removePath("Ball"); //Ball path removed here
 
 
-driveA.turnAngle(-45_deg);
+drive.turnAngle(-45_deg);
 //Should shoot mid flags here
 
 profileController.generatePath({
@@ -66,7 +51,7 @@ profileController.setTarget("Scrape", true);
 profileController.waitUntilSettled();
 profileController.removePath("Scrape");
 
-driveA.turnAngle(-45_deg);
+drive.turnAngle(-45_deg);
 //Should shoot top and mid flags
 profileController.generatePath({
 Point{0_ft, 0_ft, 0_deg},

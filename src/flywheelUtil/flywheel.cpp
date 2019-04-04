@@ -1,10 +1,10 @@
 #include "C:\Users\clove\Desktop\X4\include\main.h"
 #include "pidVelSystem.hpp"
-
-Motor* flywheel = new okapi::Motor(7);
+#include "C:\Users\clove\Desktop\X4\src\robotUtil\initRobot.hpp"
+//Motor* flywheel = new okapi::Motor(7);
 double flywheelRatio = 5;
 using namespace flywheelLib;
-flywheelLib::velPID* pid = new flywheelLib::velPID(0.35, 0.05, 0.045, 0.9);
+flywheelLib::velPID* pid = new flywheelLib::velPID(0.5, 0.05, 0.055, 0.9);
 
 flywheelLib::emaFilter* rpmFilter = new flywheelLib::emaFilter(0.15);
 
@@ -12,7 +12,7 @@ double motorSlew = 0.7;
 
 
 
-double targetRPM = 500*5;
+double targetRPM = 535*5;
 
 double currentRPM = 0;
 
@@ -40,7 +40,7 @@ void flywheelControl()
 
   //Give the motor a bit of a starting boost
 
-  if(motorPower > lastPower && lastPower < 10 && motorPower > 10) lastPower = 10;
+  if(motorPower > lastPower && lastPower < 10 && motorPower > 10) lastPower = 30;
 
 
 
