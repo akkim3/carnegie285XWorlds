@@ -1,7 +1,7 @@
 #include "C:\Users\clove\Desktop\X4\src\robotUtil\initrobot.hpp"
 #include "main.h"
 
-Motor scraper (11, false, AbstractMotor::gearset::green);;
+Motor scraper (4, true, AbstractMotor::gearset::green);;
 Motor intake (8, false, AbstractMotor::gearset::green);
 Motor* flywheel = new okapi::Motor(7);
 Motor indexer (3,false, AbstractMotor::gearset::blue);

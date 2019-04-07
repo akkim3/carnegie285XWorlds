@@ -34,19 +34,21 @@ bool intakeRevOn = false;
  void toggleIntake(){
    intakeOn = !intakeOn;
    if(intakeOn){
-     intake.moveVelocity(200);
+     intakeRevOn = false;
+     intake.moveVoltage(10000);
    } else{
-     intake.moveVelocity(0);
+     intake.moveVoltage(0);
    }
  }
  void toggleIntakeRev(){
    intakeRevOn = !intakeRevOn;
    if(intakeRevOn){
-   intake.moveVelocity(-200);
-   indexer.moveVelocity(-600);
+     intakeOn = false;
+   intake.moveVoltage(-10000);
+   indexer.moveVoltage(-10000);
 } else{
-intake.moveVelocity(0);
-indexer.moveVelocity(0);
+intake.moveVoltage(0);
+indexer.moveVoltage(0);
 
 }
  }
@@ -63,7 +65,8 @@ void opcontrol() {
   //flywheel.setGearing(AbstractMotor::gearset::blue);
   indexer.setGearing(AbstractMotor::gearset::green);
 
-
+  scraper.moveAbsolute(-95, 100);
+  scraper.tarePosition();
 	while(true){
     //intake.moveVelocity();
     flywheelControl();
@@ -79,12 +82,12 @@ void opcontrol() {
     }
     if(placeholder.isPressed()){
 
-      scraper.moveRelative(200,200);
+      scraper.moveAbsolute(325,200);
 
     }
     if(placeholder.changedToReleased()){
 
-      scraper.moveRelative(-200, 200);
+      scraper.moveAbsolute(0, 200);
     }
     if(flywheelShoot.isPressed()){
       indexer.moveVelocity(200);
