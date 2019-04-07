@@ -65,7 +65,7 @@ void opcontrol() {
   //flywheel.setGearing(AbstractMotor::gearset::blue);
   indexer.setGearing(AbstractMotor::gearset::green);
 
-  scraper.moveAbsolute(-95, 100);
+  scraper.moveAbsolute(95, 100);
   scraper.tarePosition();
 	while(true){
     //intake.moveVelocity();
@@ -91,7 +91,11 @@ void opcontrol() {
     }
     if(flywheelShoot.isPressed()){
       indexer.moveVelocity(200);
-      intake.moveVelocity(400);
+      intake.moveRelative(360, 200);
+    }else{
+
+      indexer.moveVelocity(0);
+
     }
     if(doubleShotTest.changedToPressed()){
 
