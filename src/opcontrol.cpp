@@ -29,6 +29,8 @@
  ControllerButton intakeRev (ControllerDigital::L2);
 
  ControllerButton doubleShotTest (ControllerDigital::A);
+ ControllerButton changeRPMUp (ControllerDigital::X);
+ ControllerButton changeRPMDown (ControllerDigital::Y);
 bool intakeOn = false;
 bool intakeRevOn = false;
  void toggleIntake(){
@@ -54,22 +56,23 @@ indexer.moveVoltage(0);
  }
 void doubleShot(){
   indexer.moveVelocity(600);
-  pros::delay(200);
-  scraper.moveRelative(-120, 200);
-  pros::delay(200);
-  scraper.moveRelative(-120, 200);
+  intake.moveVelocity(200);
+  pros::delay(600);
+  scraper.moveAbsolute(-95, 200);
+  pros::delay(1000);
+  scraper.moveAbsolute(0, 200);
 }
-
+double tRPM = 460*5;
 void opcontrol() {
-  intake.setGearing(AbstractMotor::gearset::blue);
-  //flywheel.setGearing(AbstractMotor::gearset::blue);
-  indexer.setGearing(AbstractMotor::gearset::green);
+  intake.setGearing(AbstractMotor::gearset::green);
+  flywheel-> setGearing(AbstractMotor::gearset::blue);
+  indexer.setGearing(AbstractMotor::gearset::blue);
 
   scraper.moveAbsolute(95, 100);
   scraper.tarePosition();
 	while(true){
     //intake.moveVelocity();
-    flywheelControl();
+    flywheelControl(tRPM);
     //flywheelA.setMaxVelocity(536);
     //flywheelA.moveVelocity(535);
     if(intakeFwd.changedToPressed()){
@@ -83,23 +86,31 @@ void opcontrol() {
     if(placeholder.isPressed()){
 
       scraper.moveAbsolute(325,200);
+}
 
-    }
     if(placeholder.changedToReleased()){
 
       scraper.moveAbsolute(0, 200);
     }
+
+
     if(flywheelShoot.isPressed()){
-      indexer.moveVelocity(200);
-      intake.moveRelative(360, 200);
+      indexer.moveVelocity(600);
+      intake.moveVelocity(200);
     }else{
-
       indexer.moveVelocity(0);
-
+      intake.moveVelocity(0);
     }
+
     if(doubleShotTest.changedToPressed()){
 
         doubleShot();
+    }
+    if(changeRPMUp.changedToPressed()){
+      flywheelControl(460*5);
+    }
+    if(changeRPMDown.changedToPressed()){
+      flywheelControl(420*5);
     }
     drive.arcade(controller.getAnalog(ControllerAnalog::leftY),controller.getAnalog(ControllerAnalog::rightX));
     //drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));

@@ -20,48 +20,46 @@ QLength platformAlignDistance = -4.0_ft;
 QLength alliancePlatformDistance = 4.0_ft;
 QLength centerPlatformDistance = 6.0_ft;
 
+void front(){
+  profileController.setTarget("Ball");
+  intake.moveVelocity(200);
+  profileController.waitUntilSettled();
+  profileController.setTarget("Ball", true); //Go back to starting tile
+  profileController.waitUntilSettled();
+  profileController.removePath("Ball"); //Ball path removed here
 
+
+  drive.turnAngle(-45_deg);
+  //Should shoot mid flags here
+
+  profileController.generatePath({
+  Point{0_ft, 0_ft, 0_deg},
+  Point{2_ft, 0_ft, 0_deg}},
+  "Scrape"
+  );
+  profileController.setTarget("Scrape");
+  profileController.waitUntilSettled();
+  profileController.setTarget("Scrape", true);
+  profileController.waitUntilSettled();
+  profileController.removePath("Scrape");
+
+  drive.turnAngle(-45_deg);
+  //Should shoot top and mid flags
+  profileController.generatePath({
+  Point{0_ft, 0_ft, 0_deg},
+  Point{4_ft, 0_ft, 0_deg}},
+  "botFlag"
+  );
+  profileController.setTarget("botFlag");
+  profileController.waitUntilSettled();
+  profileController.setTarget("botFlag", true);
+  profileController.waitUntilSettled();
+  profileController.removePath("botFlag");
+}
 
 void autonomous() {
 //  profile.generatePath({Point{1_ft, 7ft, 0_deg}, Point{5_ft, 7_ft, 0_deg}}, "Cap"});
- profileController.generatePath({
-  Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
-  Point{sideCapDistance, 0_ft, 0_deg}}, //
-  "Ball" // Profile name
-);
-profileController.setTarget("Ball");
-intake.moveVelocity(200);
-profileController.waitUntilSettled();
-profileController.setTarget("Ball", true); //Go back to starting tile
-profileController.waitUntilSettled();
-profileController.removePath("Ball"); //Ball path removed here
+front();
 
-
-drive.turnAngle(-45_deg);
-//Should shoot mid flags here
-
-profileController.generatePath({
-Point{0_ft, 0_ft, 0_deg},
-Point{2_ft, 0_ft, 0_deg}},
-"Scrape"
-);
-profileController.setTarget("Scrape");
-profileController.waitUntilSettled();
-profileController.setTarget("Scrape", true);
-profileController.waitUntilSettled();
-profileController.removePath("Scrape");
-
-drive.turnAngle(-45_deg);
-//Should shoot top and mid flags
-profileController.generatePath({
-Point{0_ft, 0_ft, 0_deg},
-Point{4_ft, 0_ft, 0_deg}},
-"botFlag"
-);
-profileController.setTarget("botFlag");
-profileController.waitUntilSettled();
-profileController.setTarget("botFlag", true);
-profileController.waitUntilSettled();
-profileController.removePath("botFlag");
 
 }

@@ -12,7 +12,7 @@ double motorSlew = 0.7;
 
 
 
-double targetRPM = 535*5;
+//double targetRPM = 460*5;
 
 double currentRPM = 0;
 
@@ -22,7 +22,7 @@ double motorPower = 0;
 
 
 
-void flywheelControl()
+void flywheelControl(double targetRPM)
 
 {
 
