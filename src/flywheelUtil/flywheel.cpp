@@ -12,7 +12,7 @@ double motorSlew = 0.7;
 
 
 
-//double targetRPM = 460*5;
+double targetRPM = 460*5;
 
 double currentRPM = 0;
 
@@ -20,15 +20,49 @@ double lastPower = 0;
 
 double motorPower = 0;
 
+double error = 0;
 
+float driveVar;
+float gain;
+long firstCross;
+float driveApprox;
+double lastError = 0;
+float driveZero;
+float predictedDrive = 0.9;
+void setFlywheelVelocity(double inputRPM){
+  targetRPM = inputRPM;
+    error = targetRPM - currentRPM;
+    lastError = error;
+    driveApprox = predictedDrive;
+    firstCross = 1;
+    driveZero = 0;
 
-void flywheelControl(double targetRPM)
+}
+void flywheelControl()
 
 {
+  if(motorPower <= 0) motorPower = 0;
 
-  currentRPM = rpmFilter->filter(flywheel->getActualVelocity() * flywheelRatio);
+
+  //currentRPM = rpmFilter->filter(flywheel->getActualVelocity() * flywheelRatio);
+  currentRPM = flywheel->getActualVelocity() * flywheelRatio;
+  error = targetRPM - currentRPM;
+  driveVar = driveVar + (error * gain);
+
+  if((sgn(error) != sgn(lastError))){
+    if(firstCross){
+      firstCross = 0;
+      driveVar = driveApprox;
+    } else{
+
+      driveVar = 0.5*(driveVar + driveZero);
+    }
+    driveZero = driveVar;
+  }
+  lastError = error;
 
 
+/*
 
   motorPower = pid->calculate(targetRPM, currentRPM);
 
@@ -59,7 +93,20 @@ void flywheelControl(double targetRPM)
 
 
   //std::cout << "RPM: " << currentRPM << " Power: "<< motorPower << " Error: "<< flywheelPID.getError() << "\n";
+*/
+  //pros::delay(20);
 
-  pros::delay(20);
+}
+
+void flywheelControlTask(void*param){
+  gain = 0.0005;
+  while(true){
+    setFlywheelVelocity(iRPM);
+    flywheelControl();
+
+    motorPower = (driveVar*127) + 0.5;
+    flywheel->move(motorPower);
+    pros::delay(20);
+  }
 
 }

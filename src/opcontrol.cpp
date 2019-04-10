@@ -1,6 +1,9 @@
 #include "main.h"
 #include "flywheelutil\flywheel.hpp"
 #include "C:\Users\clove\Desktop\X4\src\robotUtil\initRobot.hpp"
+#include <iostream>
+#include <cstdio>
+using namespace std;
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -33,7 +36,7 @@
  ControllerButton changeRPMDown (ControllerDigital::Y);
 //bool //intakeOn = false;
 //bool //intakeRevOn = false;
-
+bool flywheelOn = true;
 void doubleShot(){
   indexer.moveVelocity(600);
   intake.moveVelocity(200);
@@ -50,9 +53,17 @@ void opcontrol() {
 
   scraper.moveAbsolute(95, 100);
   scraper.tarePosition();
+
 	while(true){
+    std::cout << flywheel->getActualVelocity() << '\n';
+pros::Task my_Task (flywheelControlTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"My Task");
+    //flywheelControlTask(470*5);
+  //  cout << "RPM: ";
+
+
+  //  pros::Task spinFlywheel (flywheelControlTask,(double)tRPM, TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"Flywheel");
     //intake.moveVelocity();
-    flywheelControl(tRPM);
+  //  flywheelControl(tRPM);
     //flywheelA.setMaxVelocity(536);
     //flywheelA.moveVelocity(535);
     if(intakeFwd.isPressed() && !intakeRev.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
