@@ -168,11 +168,19 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
+<<<<<<< HEAD
             "bin/initialize.cpp.o",
             "src\\initialize.cpp"
         ],
         "directory": "C:\\Users\\clove\\Desktop\\X4",
         "file": "src\\initialize.cpp"
+=======
+            "bin/opcontrol.cpp.o",
+            "src\\opcontrol.cpp"
+        ],
+        "directory": "C:\\Users\\clove\\Desktop\\X4",
+        "file": "src\\opcontrol.cpp"
+>>>>>>> parent of 9c1b0af... Fixed Intake system
     },
     {
         "arguments": [

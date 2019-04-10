@@ -34,9 +34,35 @@ using namespace std;
  ControllerButton doubleShotTest (ControllerDigital::A);
  ControllerButton changeRPMUp (ControllerDigital::X);
  ControllerButton changeRPMDown (ControllerDigital::Y);
+<<<<<<< HEAD
 //bool //intakeOn = false;
 //bool //intakeRevOn = false;
 bool flywheelOn = true;
+=======
+bool intakeOn = false;
+bool intakeRevOn = false;
+ void toggleIntake(){
+   intakeOn = !intakeOn;
+   if(intakeOn){
+     intakeRevOn = false;
+     intake.moveVoltage(10000);
+   } else{
+     intake.moveVoltage(0);
+   }
+ }
+ void toggleIntakeRev(){
+   intakeRevOn = !intakeRevOn;
+   if(intakeRevOn){
+     intakeOn = false;
+   intake.moveVoltage(-10000);
+   indexer.moveVoltage(-10000);
+} else{
+intake.moveVoltage(0);
+indexer.moveVoltage(0);
+
+}
+ }
+>>>>>>> parent of 9c1b0af... Fixed Intake system
 void doubleShot(){
   indexer.moveVelocity(600);
   intake.moveVelocity(200);
@@ -45,7 +71,7 @@ void doubleShot(){
   pros::delay(1000);
   scraper.moveAbsolute(0, 200);
 }
-double tRPM = 470*5;
+double tRPM = 460*5;
 void opcontrol() {
   intake.setGearing(AbstractMotor::gearset::green);
   flywheel-> setGearing(AbstractMotor::gearset::blue);
@@ -66,72 +92,43 @@ pros::Task my_Task (flywheelControlTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT
   //  flywheelControl(tRPM);
     //flywheelA.setMaxVelocity(536);
     //flywheelA.moveVelocity(535);
-    if(intakeFwd.isPressed() && !intakeRev.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
+    if(intakeFwd.changedToPressed()){
+      toggleIntake();
 
-     intake.moveVelocity(200);
+    }
+    if(intakeRev.changedToPressed()){
+      toggleIntakeRev();
 
-     }
+    }
+    if(placeholder.isPressed()){
 
-   else if(intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
+      scraper.moveAbsolute(325,200);
+}
 
-       intake.moveVelocity(-200);
+    if(placeholder.changedToReleased()){
 
-       }
-
-   else if(intakeRev.isPressed() && intakeFwd.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
-
-         intake.moveVelocity(-120);
-
-         indexer.moveVelocity(-120);
-
-         }
-
- else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed() && !flywheelShoot.isPressed()){
+      scraper.moveAbsolute(0, 200);
+    }
 
 
-
-         }
-
- else if(intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed() && !flywheelShoot.isPressed() ){
-
-
-
-         }
-         else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed() && flywheelShoot.isPressed() ){
-
-           indexer.moveVelocity(600);
-           intake.moveVelocity(200);
-
-                 }
-
-
-   else{
-
-       intake.moveVelocity(0);
-
-       indexer.moveVelocity(0);
-
-     }
-
-
-  /*  if(flywheelShoot.isPressed()){
-
+    if(flywheelShoot.isPressed()){
+      indexer.moveVelocity(600);
+      intake.moveVelocity(200);
     }else{
       indexer.moveVelocity(0);
       intake.moveVelocity(0);
     }
-*/
+
     if(doubleShotTest.changedToPressed()){
 
         doubleShot();
     }
-  /*  if(changeRPMUp.changedToPressed()){
+    if(changeRPMUp.changedToPressed()){
       flywheelControl(460*5);
     }
     if(changeRPMDown.changedToPressed()){
       flywheelControl(420*5);
     }
-    */
     drive.arcade(controller.getAnalog(ControllerAnalog::leftY),controller.getAnalog(ControllerAnalog::rightX));
     //drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
 		pros::delay(20);
