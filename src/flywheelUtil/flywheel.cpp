@@ -40,7 +40,7 @@ void flywheelControl(double targetRPM)
 
   //Give the motor a bit of a starting boost
 
-  if(motorPower > lastPower && lastPower < 10 && motorPower > 10) lastPower = 30;
+  if(motorPower > lastPower && lastPower < 10 && motorPower > 10) lastPower = 50;
 
 
 
