@@ -21,11 +21,12 @@ void initialize() {
 	pros::lcd::set_text(1, "Hello PROS User!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
-	profileController.generatePath({
+	/*profileController.generatePath({
 	 Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
 	 Point{sideCapDistance, 0_ft, 0_deg}}, //
 	 "Ball" // Profile name
  );
+ */
 }
 
 /**
