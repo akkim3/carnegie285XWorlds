@@ -19,19 +19,36 @@ QLength midFlagDistance = 1.0_ft;
 QLength platformAlignDistance = -4.0_ft;
 QLength alliancePlatformDistance = 4.0_ft;
 QLength centerPlatformDistance = 6.0_ft;
+void scrape(){
 
+
+}
+void flipCap(){
+
+  drive.moveDistanceAsync(-1_ft);
+  scraper.moveAbsolute(360,200);
+  drive.moveDistanceAsync(1_ft);
+    scraper.moveAbsolute(0,200);
+
+
+}
 void front(){
   profileController.setTarget("Ball");
   intake.moveVelocity(200);
   profileController.waitUntilSettled();
+  pros::delay(500);
+  intake.moveVelocity(0);
   profileController.setTarget("Ball", true); //Go back to starting tile
+  intake.moveVelocity(100);
   profileController.waitUntilSettled();
   profileController.removePath("Ball"); //Ball path removed here
 
 
   drive.turnAngle(-45_deg);
-  //Should shoot mid flags here
+  intake.moveVelocity(0);
 
+  //Should shoot mid flags here
+  doubleShot();
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},
   Point{2_ft, 0_ft, 0_deg}},
@@ -39,12 +56,18 @@ void front(){
   );
   profileController.setTarget("Scrape");
   profileController.waitUntilSettled();
+  scrape();
+  flipCap();
+
   profileController.setTarget("Scrape", true);
+  intake.moveVelocity(200);
   profileController.waitUntilSettled();
+  intake.moveVelocity(0);
   profileController.removePath("Scrape");
 
   drive.turnAngle(-45_deg);
   //Should shoot top and mid flags
+  doubleShot();
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},
   Point{4_ft, 0_ft, 0_deg}},

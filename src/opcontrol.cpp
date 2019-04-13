@@ -37,20 +37,14 @@ using namespace std;
 //bool //intakeOn = false;
 //bool //intakeRevOn = false;
 bool flywheelOn = true;
-void doubleShot(){
-  indexer.moveVelocity(600);
-  intake.moveVelocity(200);
-  pros::delay(200);
-  scraper.moveAbsolute(-60, 200);
-  pros::delay(1000);
-  scraper.moveAbsolute(0, 200);
-}
+
 double tRPM = 470*5;
 void opcontrol() {
   intake.setGearing(AbstractMotor::gearset::green);
   flywheel-> setGearing(AbstractMotor::gearset::blue);
   indexer.setGearing(AbstractMotor::gearset::blue);
-
+  scraper.setBrakeMode(AbstractMotor::brakeMode::hold);
+  
 
 
 	while(true){

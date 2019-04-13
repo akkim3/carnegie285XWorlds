@@ -5,6 +5,15 @@ Motor scraper (4, true, AbstractMotor::gearset::green);;
 Motor intake (8, false, AbstractMotor::gearset::green);
 Motor* flywheel = new okapi::Motor(7);
 Motor indexer (3,false, AbstractMotor::gearset::blue);
+void doubleShot(){
+  indexer.moveVelocity(600);
+  intake.moveVelocity(200);
+  pros::delay(200);
+  scraper.moveAbsolute(-120, 200);
+  pros::delay(2000);
+  scraper.moveAbsolute(0, 200);
+}
+
  ChassisControllerIntegrated drive = ChassisControllerFactory::create(
    {1,9},
    {-10,-2},
