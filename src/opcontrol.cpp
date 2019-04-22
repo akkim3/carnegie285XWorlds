@@ -31,27 +31,58 @@ using namespace std;
  ControllerButton intakeFwd (ControllerDigital::L1);
  ControllerButton intakeRev (ControllerDigital::L2);
 
- ControllerButton doubleShotTest (ControllerDigital::A);
+
  ControllerButton changeRPMUp (ControllerDigital::X);
  ControllerButton changeRPMDown (ControllerDigital::Y);
+ ControllerButton upButton (ControllerDigital::up);
+ ControllerButton dwButton (ControllerDigital::down);
+ ControllerButton leButton (ControllerDigital::left);
+  ControllerButton rtButton (ControllerDigital::right);
 //bool //intakeOn = false;
 //bool //intakeRevOn = false;
 bool flywheelOn = true;
-
+//auto pot = AsyncControllerFactory::posPID(-4, scraperPot.get_value(), 0.001, 0.0, 0.0001);
+//float potError = 0;
+//float potTarget = 3100;
+//pros::ADILineSensor flywheelSensor(2);
 double tRPM = 470*5;
 void opcontrol() {
   intake.setGearing(AbstractMotor::gearset::green);
   flywheel-> setGearing(AbstractMotor::gearset::blue);
   indexer.setGearing(AbstractMotor::gearset::blue);
   scraper.setBrakeMode(AbstractMotor::brakeMode::hold);
-  
+  indexer.setBrakeMode(AbstractMotor::brakeMode::hold);
+
 
 
 	while(true){
-    //std::cout << flywheel->getActualVelocity() << '\n';
+
+    std::cout << scraper.getPosition() << '\n';
 //pros::Task my_Task (flywheelControlTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"My Task");
     flywheelControlTask((void*)flywheelOn);
   //  cout << "RPM: ";
+
+
+    if (upButton.changedToPressed()) {
+      scraper.moveAbsolute(360, 200);
+    }
+    if (upButton.changedToReleased()) {
+      scraper.moveAbsolute(0, 200);
+    }
+    if (placeholder.changedToPressed()) {
+      scraper.moveAbsolute(360, 200);
+    }
+    if (placeholder.changedToReleased()) {
+      scraper.moveAbsolute(0, 200);
+    }
+    if(leButton.changedToPressed()){
+      scraper.moveAbsolute(-150,200);
+    }
+    if(rtButton.isPressed()){
+    //adjustScraper(true);
+    //  pros::Task scraper_Task (adjustScraper, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"ScraperTask");
+    }
+
 
 
   //  pros::Task spinFlywheel (flywheelControlTask,(double)tRPM, TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"Flywheel");
@@ -59,54 +90,71 @@ void opcontrol() {
   //  flywheelControl(tRPM);
     //flywheelA.setMaxVelocity(536);
     //flywheelA.moveVelocity(535);
-    if(intakeFwd.isPressed() && !intakeRev.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
+
+  if(intakeFwd.isPressed() && !intakeRev.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
+
+
 
      intake.moveVelocity(200);
 
+
+
      }
+
+
 
    else if(intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
 
-       intake.moveVelocity(-200);
+
+
+//       intake.moveVelocity(-200);
+//doubleShot();
+
 
        }
 
+
+
    else if(intakeRev.isPressed() && intakeFwd.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
+
+
 
          intake.moveVelocity(-120);
 
+
+
          indexer.moveVelocity(-120);
 
+
+
          }
+
+
 
  else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed() && !flywheelShoot.isPressed()){
-   scraper.moveAbsolute(360, 200);
+
+   //scraper.moveAbsolute(360, 200);
+
+
+
 
 
          }
+
+
 
  else if(intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed() && !flywheelShoot.isPressed() ){
 
-
-
          }
          else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed() && flywheelShoot.isPressed() ){
-
            indexer.moveVelocity(600);
            intake.moveVelocity(200);
-
-                 }
-
-
+    }
    else{
-
        intake.moveVelocity(0);
-       scraper.moveAbsolute(0, 200);
+
        indexer.moveVelocity(0);
-
      }
-
-
   /*  if(flywheelShoot.isPressed()){
 
     }else{
@@ -114,14 +162,18 @@ void opcontrol() {
       intake.moveVelocity(0);
     }
 */
-    if(doubleShotTest.changedToPressed()){
+if(placeholder.isPressed()){
+  scraper.moveAbsolute(360,200);
+}
+    if(doubleShotTest.isPressed()){
+      doubleShot();
+      //  pros::Task doubleShot_Task (doubleShotTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"DouleShotTask");
 
-        doubleShot();
     }
   /*  if(changeRPMUp.changedToPressed()){
       flywheelControl(460*5);
     }
-    if(changeRPMDown.changedToPressed()){
+    if(changeRPMDown.changedToPressed()){5
       flywheelControl(420*5);
     }
     */
