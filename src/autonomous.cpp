@@ -32,15 +32,23 @@ void front(){
   profileController.setTarget("Ball");
   intake.moveVelocity(200);
   profileController.waitUntilSettled();
-  pros::delay(300);
+  pros::delay(500);
   intake.moveVelocity(0);
 profileController.setTarget("Ball", true); //Go back to starting tile
   intake.moveVelocity(100);
+  if(red){
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},
   Point{3_ft, 0.5_ft, 0_deg}},
   "botFlag"
-  );
+);}
+else{
+  profileController.generatePath({
+  Point{0_ft, 0_ft, 0_deg},
+  Point{3_ft, 0_ft, 0_deg}},
+  "botFlag"
+);
+}
  profileController.waitUntilSettled();
   profileController.removePath("Ball"); //Ball path removed here
   //profileController.removePath("Ball2"); //Ball path removed here
@@ -63,7 +71,7 @@ if(red){
   drive.setMaxVelocity(200);
   //drive.moveDistance(4_ft);
 
-
+  //drive.setMaxVelocity(150);
   profileController.setTarget("botFlag");
   //drive.moveDistanceAsync(3.5_ft);
   pros::delay(1500);
@@ -82,7 +90,7 @@ if(red){
   */
 
   profileController.removePath("botFlag");
-  drive.moveDistance(-3_ft);
+  drive.moveDistance(-2.5_ft);
   drive.waitUntilSettled();
 
   drive.setMaxVelocity(50);
@@ -92,7 +100,7 @@ if(red){
     drive.turnAngle(-45_deg);
   }
   drive.setMaxVelocity(100);
-  drive.moveDistance(1_ft);
+  drive.moveDistance(1.5_ft);
 /*
   drive.moveDistance(0.5_ft);
 
@@ -103,6 +111,7 @@ if(red){
   */
   scrape();
   doubleShot();
+  flipCap();
 
 
 

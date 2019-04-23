@@ -46,6 +46,22 @@ bool flywheelOn = true;
 //float potTarget = 3100;
 //pros::ADILineSensor flywheelSensor(2);
 double tRPM = 470*5;
+void resetScraper(){
+  scraper.moveVoltage(10000);
+  pros::delay(500);
+  if(scraper.isStopped()){
+    scraper.moveVoltage(0);
+    pros::delay(200);
+    scraper.move_relative(-345, 200);
+
+    pros::delay(750);
+    //if(scraper.isStopped()){
+    scraper.tarePosition();
+  //}
+  }
+
+}
+
 void opcontrol() {
   intake.setGearing(AbstractMotor::gearset::green);
   flywheel-> setGearing(AbstractMotor::gearset::blue);
@@ -69,17 +85,18 @@ void opcontrol() {
     if (upButton.changedToReleased()) {
       scraper.moveAbsolute(0, 200);
     }
-    if (placeholder.changedToPressed()) {
+    if (intakeRev.changedToPressed()) {
       scraper.moveAbsolute(360, 200);
     }
-    if (placeholder.changedToReleased()) {
+    if (intakeRev.changedToReleased()) {
       scraper.moveAbsolute(0, 200);
     }
     if(leButton.changedToPressed()){
       scraper.moveAbsolute(-150,200);
     }
-    if(rtButton.isPressed()){
+    if(rtButton.changedToPressed()){
     //adjustScraper(true);
+    resetScraper();
     //  pros::Task scraper_Task (adjustScraper, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"ScraperTask");
     }
 
@@ -162,10 +179,7 @@ void opcontrol() {
       intake.moveVelocity(0);
     }
 */
-if(placeholder.isPressed()){
-  scraper.moveAbsolute(360,200);
-}
-    if(doubleShotTest.isPressed()){
+    if(placeholder.changedToPressed()){
       doubleShot();
       //  pros::Task doubleShot_Task (doubleShotTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"DouleShotTask");
 

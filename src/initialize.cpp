@@ -24,7 +24,7 @@ void initialize() {
 */
  profileController.generatePath({
    Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
-   Point{3.5_ft, 0_ft, 0_deg}}, //
+   Point{4_ft, 0_ft, 0_deg}}, //
    "Ball" // Profile name
  );
 

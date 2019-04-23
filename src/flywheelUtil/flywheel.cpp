@@ -69,9 +69,11 @@ void flywheelControl()
 }
 
 void flywheelControlTask(void*param){
-//  gain = 0.00085;
-  gain = 0.0008;
-  predictedDrive = 0.75;
+  gain = 0.0005;
+  //gain = 0.0008;
+//  predictedDrive = 0.7;
+predictedDrive = 0.65;
+
   //while(true){
     setFlywheelVelocity(560);
     flywheelControl();
