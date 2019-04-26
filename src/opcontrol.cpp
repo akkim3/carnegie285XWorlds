@@ -3,6 +3,7 @@
 #include "C:\Users\clove\Desktop\X4\src\robotUtil\initRobot.hpp"
 #include <iostream>
 #include <cstdio>
+#include <string>
 using namespace std;
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -25,19 +26,7 @@ using namespace std;
  //Indexer: 3
  //Flywheel: 6
  //Scraper
- Controller controller;
- ControllerButton flywheelShoot (ControllerDigital::R1);
- ControllerButton placeholder (ControllerDigital::R2);
- ControllerButton intakeFwd (ControllerDigital::L1);
- ControllerButton intakeRev (ControllerDigital::L2);
 
-
- ControllerButton changeRPMUp (ControllerDigital::X);
- ControllerButton changeRPMDown (ControllerDigital::Y);
- ControllerButton upButton (ControllerDigital::up);
- ControllerButton dwButton (ControllerDigital::down);
- ControllerButton leButton (ControllerDigital::left);
-  ControllerButton rtButton (ControllerDigital::right);
 //bool //intakeOn = false;
 //bool //intakeRevOn = false;
 bool flywheelOn = true;
@@ -46,21 +35,6 @@ bool flywheelOn = true;
 //float potTarget = 3100;
 //pros::ADILineSensor flywheelSensor(2);
 double tRPM = 470*5;
-void resetScraper(){
-  scraper.moveVoltage(10000);
-  pros::delay(500);
-  if(scraper.isStopped()){
-    scraper.moveVoltage(0);
-    pros::delay(200);
-    scraper.move_relative(-345, 200);
-
-    pros::delay(750);
-    //if(scraper.isStopped()){
-    scraper.tarePosition();
-  //}
-  }
-
-}
 
 void opcontrol() {
   intake.setGearing(AbstractMotor::gearset::green);
@@ -68,37 +42,36 @@ void opcontrol() {
   indexer.setGearing(AbstractMotor::gearset::blue);
   scraper.setBrakeMode(AbstractMotor::brakeMode::hold);
   indexer.setBrakeMode(AbstractMotor::brakeMode::hold);
+  pros::Task doubleShot_Task (doubleShotTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"DoubleShotTask");
+  pros::Task scraperOpTask (scraperTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"ScraperTask");
+  pros::Task intakeOpTask (intakeTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"IntakeTask");
+  //pros::Task my_Task (flywheelControlTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"My Task");
+  //pros::delay(3000);
+  //gyro.reset();
 
 
 
 	while(true){
 
-    std::cout << scraper.getPosition() << '\n';
-//pros::Task my_Task (flywheelControlTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"My Task");
+    //std::cout << scraper.getPosition() << '\n';
     flywheelControlTask((void*)flywheelOn);
+    //pros::delay(1000);
+    //gyro(3,1);
+    //controller.setText(1, 1,std::to_string(gyro.get()));
+    //pros::delay(100);
+    //controller.clearLine(1);
+    //gyro.get_value());
+    if(turnOnFlywheel.changedToPressed()){
+      flywheel->moveVelocity(560);
+    }
   //  cout << "RPM: ";
+  if(reverseButton.changedToPressed()){
+    drive.setMaxVelocity(80);
+    drive.turnAngle(90_deg);
+    drive.waitUntilSettled();
+    drive.setMaxVelocity(200);
+  }
 
-
-    if (upButton.changedToPressed()) {
-      scraper.moveAbsolute(360, 200);
-    }
-    if (upButton.changedToReleased()) {
-      scraper.moveAbsolute(0, 200);
-    }
-    if (intakeRev.changedToPressed()) {
-      scraper.moveAbsolute(360, 200);
-    }
-    if (intakeRev.changedToReleased()) {
-      scraper.moveAbsolute(0, 200);
-    }
-    if(leButton.changedToPressed()){
-      scraper.moveAbsolute(-150,200);
-    }
-    if(rtButton.changedToPressed()){
-    //adjustScraper(true);
-    resetScraper();
-    //  pros::Task scraper_Task (adjustScraper, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"ScraperTask");
-    }
 
 
 
@@ -108,91 +81,14 @@ void opcontrol() {
     //flywheelA.setMaxVelocity(536);
     //flywheelA.moveVelocity(535);
 
-  if(intakeFwd.isPressed() && !intakeRev.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
 
 
 
-     intake.moveVelocity(200);
-
-
-
-     }
-
-
-
-   else if(intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
-
-
-
-//       intake.moveVelocity(-200);
-//doubleShot();
-
-
-       }
-
-
-
-   else if(intakeRev.isPressed() && intakeFwd.isPressed() && !placeholder.isPressed() && !flywheelShoot.isPressed()){
-
-
-
-         intake.moveVelocity(-120);
-
-
-
-         indexer.moveVelocity(-120);
-
-
-
-         }
-
-
-
- else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed() && !flywheelShoot.isPressed()){
-
-   //scraper.moveAbsolute(360, 200);
-
-
-
-
-
-         }
-
-
-
- else if(intakeRev.isPressed() && !intakeFwd.isPressed() && placeholder.isPressed() && !flywheelShoot.isPressed() ){
-
-         }
-         else if(!intakeRev.isPressed() && !intakeFwd.isPressed() && !placeholder.isPressed() && flywheelShoot.isPressed() ){
-           indexer.moveVelocity(600);
-           intake.moveVelocity(200);
+if(placeholder.changedToPressed()){
+      //doubleShot();
     }
-   else{
-       intake.moveVelocity(0);
-
-       indexer.moveVelocity(0);
-     }
-  /*  if(flywheelShoot.isPressed()){
-
-    }else{
-      indexer.moveVelocity(0);
-      intake.moveVelocity(0);
-    }
-*/
-    if(placeholder.changedToPressed()){
-      doubleShot();
-      //  pros::Task doubleShot_Task (doubleShotTask, (void*)flywheelOn,TASK_PRIORITY_DEFAULT,TASK_STACK_DEPTH_DEFAULT,"DouleShotTask");
-
-    }
-  /*  if(changeRPMUp.changedToPressed()){
-      flywheelControl(460*5);
-    }
-    if(changeRPMDown.changedToPressed()){5
-      flywheelControl(420*5);
-    }
-    */
     drive.arcade(controller.getAnalog(ControllerAnalog::leftY),controller.getAnalog(ControllerAnalog::rightX));
-    //drive.arcade(controller.getAnalog(ControllerAnalog::leftY), controller.getAnalog(ControllerAnalog::rightX));
+
 		pros::delay(20);
 	}
 }

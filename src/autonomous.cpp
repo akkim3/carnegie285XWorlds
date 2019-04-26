@@ -15,7 +15,7 @@
  */
 #include "C:\Users\clove\Desktop\X4\src\robotUtil\initRobot.hpp"
 bool on = true;
-
+float bruhMomentum = 900.69;
 QLength sideCapDistance = 3.5_ft;
 QLength frontFlagDistance = 4.5_ft;
 QLength frontCapDistance = 4.0_ft;
@@ -28,24 +28,24 @@ bool red = true;
 
 void front(){
   scraper.moveAbsolute(0, 200);
-
+  intake.moveVoltage(12000);
   profileController.setTarget("Ball");
-  intake.moveVelocity(200);
+  intake.moveVoltage(12000);
   profileController.waitUntilSettled();
+  intake.moveVoltage(12000);
   pros::delay(500);
-  intake.moveVelocity(0);
 profileController.setTarget("Ball", true); //Go back to starting tile
   intake.moveVelocity(100);
   if(red){
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},
-  Point{3_ft, 0.5_ft, 0_deg}},
+  Point{4_ft, 0_ft, 0_deg}},
   "botFlag"
 );}
 else{
   profileController.generatePath({
   Point{0_ft, 0_ft, 0_deg},
-  Point{3_ft, 0_ft, 0_deg}},
+  Point{4_ft, 0_ft, 0_deg}},
   "botFlag"
 );
 }
@@ -53,15 +53,17 @@ else{
   profileController.removePath("Ball"); //Ball path removed here
   //profileController.removePath("Ball2"); //Ball path removed here
 
-drive.setMaxVelocity(70);
+drive.setMaxVelocity(80);
 //drive.moveDistance(-0.5_ft);
 if(red){
-  drive.turnAngle(-90_deg);
+  drive.turnAngle(-85_deg);
+  drive.waitUntilSettled();
 }else{
   drive.turnAngle(90_deg);
+  drive.waitUntilSettled();
 }
   intake.moveVelocity(0);
-
+drive.setMaxVelocity(200);
 
   //Should shoot mid flags here
   //drive.moveDistance(0.5_ft);
@@ -72,12 +74,19 @@ if(red){
   //drive.moveDistance(4_ft);
 
   //drive.setMaxVelocity(150);
+  if(red){
+    drive.turnAngle(-5_deg);
+    drive.waitUntilSettled();
+  }else{
+    drive.turnAngle(0_deg);
+    drive.waitUntilSettled();
+  }
   profileController.setTarget("botFlag");
   //drive.moveDistanceAsync(3.5_ft);
-  pros::delay(1500);
-  scraper.moveAbsolute(360, 200);
-  pros::delay(500);
-  scraper.moveAbsolute(0, 200);
+  //pros::delay(1500);
+  //scraper.moveAbsolute(360, 200);
+  //pros::delay(500);
+  //scraper.moveAbsolute(0, 200);
   profileController.waitUntilSettled();
   //drive.waitUntilSettled();
   /*
@@ -85,33 +94,46 @@ if(red){
   pros::delay(500);
   scraper.moveAbsolute(0, 200);
 */
-  /*profileController.setTarget("botFlag", true);
+  profileController.setTarget("botFlag", true);
   profileController.waitUntilSettled();
-  */
+
 
   profileController.removePath("botFlag");
-  drive.moveDistance(-2.5_ft);
+  //drive.setMaxVelocity(10);
+  //drive.moveDistance(-4_ft);
   drive.waitUntilSettled();
 
-  drive.setMaxVelocity(50);
+  drive.setMaxVelocity(80);
   if(red){
-    drive.turnAngle(45_deg);
+    drive.turnAngle(40_deg);
+    drive.waitUntilSettled();
   }else{
-    drive.turnAngle(-45_deg);
+    drive.turnAngle(40_deg);
+    drive.waitUntilSettled();
   }
   drive.setMaxVelocity(100);
-  drive.moveDistance(1.5_ft);
-/*
-  drive.moveDistance(0.5_ft);
+  //drive.moveDistance(1.5_ft);
+
+  drive.moveDistance(2_ft);
+  //indexer.moveVelocity(200);
+
+  //pros::delay(1000);
+  scraper.moveAbsolute(360, 200);
+  //drive.waitUntilSettled();
+  pros::delay(300);
+
+  drive.moveDistanceAsync(-2_ft);
+  intake.moveVelocity(200);
+  pros::delay(500);
+  scraper.moveAbsolute(0, 200);
+  drive.waitUntilSettled();
 
 
-  indexer.moveVelocity(0);
+  //flipCap();
 
-  flipCap();
-  */
-  scrape();
-  doubleShot();
-  flipCap();
+  //scrape();
+  //doubleShot();
+//  flipCap();
 
 
 
@@ -153,17 +175,23 @@ if(red){
 */
 }
 void backSimple(){
+  intake.moveVoltage(12000);
   scraper.moveAbsolute(0, 200);
   profileController.generatePath({
    Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
-   Point{sideCapDistance, 0_ft, 0_deg}}, //
+   Point{4_ft, 0_ft, 0_deg}}, //
    "Ball" // Profile name
  );
   profileController.setTarget("Ball");
   intake.moveVelocity(200);
   profileController.waitUntilSettled();
-  pros::delay(500);
-  intake.moveVelocity(0);
+  //pros::delay(500);
+  //drive.setMaxVelocity(80);
+  //drive.turnAngle(-45_deg);
+
+  //drive.waitUntilSettled();
+  //drive.setMaxVelocity(200);
+  //doubleShot();
   profileController.setTarget("Ball", true);
   profileController.waitUntilSettled();
   drive.setMaxVelocity(100);
@@ -177,7 +205,7 @@ void backSimple(){
   drive.setMaxVelocity(200);
   profileController.generatePath({
    Point{0_ft, 0_ft, 0_deg},  //   (0, 0, 0)
-   Point{2_ft, 0_ft, 0_deg}}, //
+   Point{1.5_ft, 0_ft, 0_deg}}, //
    "LineUp" // Profile name
  );
   profileController.setTarget("LineUp");
@@ -188,21 +216,21 @@ void backSimple(){
   }else{
     drive.turnAngle(-90_deg);
   }
-  drive.setMaxVelocity(200);
+  drive.setMaxVelocity(100);
   drive.moveDistance(4_ft);
   drive.waitUntilSettled();
-  drive.setMaxVelocity(100);
+  /*drive.setMaxVelocity(80);
   drive.moveDistance(0.5_ft);
   drive.waitUntilSettled();
   drive.moveDistance(-0.5_ft);
   drive.waitUntilSettled();
   if(red){
-    drive.turnAngle(-60_deg);
+    drive.turnAngle(45_deg);
   }else{
-    drive.turnAngle(60_deg);
+    drive.turnAngle(-45_deg);
   }
   doubleShot();
-    //intake.moveVelocity(0)
+  */  //intake.moveVelocity(0)
 
 }
 void backFull(){
@@ -242,13 +270,19 @@ void backFull(){
   flipCap();
 
   //doubleShot();
-
-
-
-
-
+}
+void skills(){
+  red = true;
+  front();
+  drive.moveDistance(-3_ft);
+  drive.turnAngle(-45_deg);
+  drive.moveDistance(-4_ft);
+  drive.turnAngle(90_deg);
+  drive.moveDistance(10_ft);
 }
 void autonomous() {
+
+intake.moveVelocity(200);
 //  profile.generatePath({Point{1_ft, 7ft, 0_deg}, Point{5_ft, 7_ft, 0_deg}}, "Cap"});
 flywheel->setGearing(AbstractMotor::gearset::blue);
 
